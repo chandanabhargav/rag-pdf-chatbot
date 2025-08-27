@@ -6,10 +6,13 @@ import tempfile, os
 import streamlit as st
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-st.title("PDF Q&A")
-st.write("Upload a PDF")
+# Page setup
+st.set_page_config(page_title="📘 RAG PDF Q&A", layout="wide")
+st.title("📘 RAG-based PDF Q&A App")
+st.write("Upload a PDF and ask questions. Answers are generated with RAG (Retrieval-Augmented Generation).")
 
-pdf_file = st.file_uploader("Upload a PDF file", type=['pdf'])
+# Upload PDF
+pdf_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
 if pdf_file:
 
@@ -31,9 +34,9 @@ if pdf_file:
         retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
         qa_chain = RetrievalQA.from_chain_type(llm=ChatOpenAI(model="gpt-4o-mini",temperature=0),retriever=retriever)
 
-        st.subheader("Ask a question")
+        st.subheader("💬 Ask a question")
         query = st.text_input("Your question:")
-
+        
         if query:
             with st.spinner("Searching"):
                 answer = qa_chain.run(query)
